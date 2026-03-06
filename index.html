@@ -23,150 +23,446 @@
     --text-muted: #94a3b8;
 }
 
-/* Hide scrollbars completely across all browsers */
+html {
+    height: 100%;
+}
+
 html, body {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 ::-webkit-scrollbar {
-    display: none; /* Chrome/Safari/Opera */
+    display: none;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: radial-gradient(circle at top left, #1e1b4b, var(--bg-color));
-    font-family: 'Quantico', sans-serif; /* Applied Quantico */
+    font-family: 'Quantico', sans-serif;
     color: var(--text-main);
+    padding: 30px;
+}
+
+#main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex: 1;
 }
 
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 40px;
     width: 100%;
-    max-width: 420px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Header */
+.header {
     text-align: center;
-    z-index: 10;
-}
-h2 { margin-bottom: 5px; }
-p { color: var(--text-muted); font-size: .9rem; }
-
-#qrcode-container {
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background: #fff;
-    padding: 15px;
-    border-radius: 12px;
-    margin: 20px auto;
-    width: 200px;
-    height: 200px;
+    margin-bottom: 30px;
 }
 
-.secret-key {
-    font-family: monospace;
-    background: rgba(0,0,0,0.3);
-    padding: 8px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    word-break: break-all;
-    display: none;
-    font-size: 0.8rem;
+.header h2 { 
+    font-size: 1.8rem;
+    margin-bottom: 5px;
 }
 
-.timer {
-    margin-bottom: 15px;
-    font-size: 0.9rem;
+.header p { 
+    color: var(--text-muted); 
+    font-size: 0.9rem; 
+}
+
+/* Configuration Row */
+.config-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.7rem;
     color: var(--text-muted);
-}
-
-.current-code {
-    font-size: 1.4rem;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-    display: none;
-    color: #4ade80;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 input {
-    width: calc(100% - 30px);
-    padding: 12px;
-    background: rgba(0,0,0,0.2);
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(0,0,0,0.25);
     border: 1px solid var(--glass-border);
     border-radius: 8px;
     color: white;
     font-family: 'Quantico', sans-serif;
-    font-size: 1.2rem;
-    text-align: center;
-    letter-spacing: 4px;
-    margin-bottom: 15px;
+    font-size: 0.95rem;
+    line-height: 1.2;
 }
-input:focus { border-color: var(--accent); outline: none; }
 
-button {
-    width: 100%;
-    padding: 12px;
+input:focus { 
+    border-color: var(--accent); 
+    outline: none; 
+}
+
+input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.btn-generate {
+    padding: 14px 28px;
     border-radius: 8px;
     font-family: 'Quantico', sans-serif;
     font-weight: 600;
     cursor: pointer;
-    margin-bottom: 15px;
-    font-size: 1rem;
-}
-.btn-generate {
+    font-size: 0.95rem;
     background: var(--accent);
     color: white;
     border: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    line-height: 1.2;
 }
-.btn-generate:hover { background: var(--accent-hover); }
+
+.btn-generate:hover { 
+    background: var(--accent-hover); 
+}
+
+/* Placeholder State */
+.placeholder-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    border: 2px dashed var(--glass-border);
+    border-radius: 16px;
+}
+
+.placeholder-state svg {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    opacity: 0.4;
+}
+
+.placeholder-state p {
+    font-size: 0.9rem;
+}
+
+/* Main Content Grid - Equal columns */
+.main-content {
+    display: none;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    gap: 25px;
+    align-items: stretch;
+}
+
+.main-content.active {
+    display: grid;
+}
+
+/* Section Base Styles */
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 25px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    min-height: 280px;
+}
+
+/* QR Section */
+.qr-section {
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-section .section-title {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#qrcode-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    width: 160px;
+    height: 160px;
+}
+
+/* Vertical Divider */
+.divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--glass-border), var(--glass-border), transparent);
+    align-self: stretch;
+}
+
+/* Info Section */
+.info-section {
+    gap: 15px;
+}
+
+.account-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.account-box .label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.account-box .issuer {
+    font-size: 1rem;
+    color: #60a5fa;
+    font-weight: 700;
+}
+
+.account-box .email {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    word-break: break-all;
+}
+
+.code-box {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.code-box .label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.code-box .code {
+    font-size: 1.8rem;
+    letter-spacing: 5px;
+    color: #4ade80;
+    font-weight: 700;
+}
+
+.code-box .timer {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+}
+
+/* Test Section */
+.test-section {
+    gap: 12px;
+}
+
+.test-section .section-title {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#otp-input {
+    font-size: 1.4rem;
+    text-align: center;
+    letter-spacing: 8px;
+    padding: 16px;
+    background: rgba(0,0,0,0.3);
+}
 
 .btn-test {
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-family: 'Quantico', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
     background: transparent;
     border: 2px solid var(--accent);
     color: var(--accent);
+    transition: all 0.2s ease;
+    width: 100%;
 }
-.btn-test:hover { background: rgba(59,130,246,.1); }
 
-.result {
-    padding: 10px;
-    border-radius: 8px;
-    font-weight: 600;
-    display: none;
+.btn-test:hover { 
+    background: rgba(59,130,246,.15); 
 }
-.success {
-    background: rgba(34,197,94,.2);
+
+/* Button Success State */
+.btn-test.success {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: #22c55e;
     color: #4ade80;
-    border: 1px solid #22c55e;
-    display: block;
-}
-.error {
-    background: rgba(239,68,68,.2);
-    color: #f87171;
-    border: 1px solid #ef4444;
-    display: block;
 }
 
+/* Button Error State with Shake */
+.btn-test.error {
+    border-color: #ef4444;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.15);
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Secret Strip */
+.secret-strip {
+    display: none;
+    margin-top: 25px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 15px 20px;
+}
+
+.secret-strip.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.secret-strip .secret-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.secret-strip .secret-value {
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #fbbf24;
+    letter-spacing: 2px;
+    word-break: break-all;
+    text-align: center;
+}
+
+/* Footer */
 .footer {
-    position: fixed;
-    bottom: 15px;
     width: 100%;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
-    z-index: 5;
+    padding: 20px 0 0 0;
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
-/* Landscape blocker: 
-Checks if device is in landscape AND height is small (typical phone in landscape < 500px).
-Tablets usually have a much taller screen in landscape, avoiding this trap. 
-*/
+/* Responsive */
+@media screen and (max-width: 900px) {
+    body {
+        padding: 20px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+    
+    .glass-panel {
+        padding: 25px;
+    }
+    
+    .config-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-generate {
+        width: 100%;
+    }
+    
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .main-content.active {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .divider {
+        display: none;
+    }
+    
+    .section {
+        min-height: auto;
+        padding: 20px;
+    }
+    
+    .qr-section, .info-section, .test-section {
+        width: 100%;
+    }
+    
+    #qrcode-container {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .code-box .code {
+        font-size: 2rem;
+        letter-spacing: 6px;
+    }
+    
+    .secret-strip.active {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .secret-strip .secret-value {
+        font-size: 0.75rem;
+    }
+}
+
+/* Landscape blocker for phones */
 #landscape-warning {
     display: none;
     position: fixed;
@@ -180,7 +476,8 @@ Tablets usually have a much taller screen in landscape, avoiding this trap.
     flex-direction: column;
     padding: 20px;
 }
-@media screen and (max-height: 500px) and (orientation: landscape) {
+
+@media screen and (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
     #main-wrapper { display: none !important; }
     #landscape-warning { display: flex; }
 }
@@ -194,24 +491,80 @@ Tablets usually have a much taller screen in landscape, avoiding this trap.
     <p>Please rotate your phone back to portrait mode to use this app.</p>
 </div>
 
-<div id="main-wrapper" style="display: flex; justify-content: center; align-items: center; width: 100%;">
+<div id="main-wrapper">
     <div class="glass-panel">
-        <h2>Auth Tester</h2>
-        <p>Generate QR & Test 2FA Codes locally</p>
+        
+        <!-- Header -->
+        <div class="header">
+            <h2>Auth Tester</h2>
+            <p>Generate QR & Test 2FA Codes locally</p>
+        </div>
 
-        <button class="btn-generate" onclick="generateAuth()">Generate Auth QR</button>
+        <!-- Configuration Row -->
+        <div class="config-row">
+            <div class="input-group">
+                <label>Account / Issuer Name</label>
+                <input type="text" id="issuer-input" placeholder="e.g. Google, GitHub, XRV LABS">
+            </div>
+            <div class="input-group">
+                <label>Email / Username</label>
+                <input type="email" id="label-input" placeholder="e.g. user@example.com">
+            </div>
+            <button class="btn-generate" id="generate-btn">Generate QR</button>
+        </div>
 
-        <div id="qrcode-container"></div>
-        <div id="secret-text" class="secret-key"></div>
+        <!-- Placeholder State -->
+        <div id="placeholder-state" class="placeholder-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h2M4 12h2m10 0a2 2 0 100-4 2 2 0 000 4zm-8 8a2 2 0 100-4 2 2 0 000 4zm0-8a2 2 0 100-4 2 2 0 000 4z" />
+            </svg>
+            <p>Enter account details above and click Generate QR to start</p>
+        </div>
 
-        <div id="live-code" class="current-code"></div>
-        <div id="timer" class="timer"></div>
+        <!-- Main Content Grid -->
+        <div id="main-content" class="main-content">
+            
+            <!-- QR Code Section -->
+            <div class="section qr-section">
+                <div class="section-title">Scan QR Code</div>
+                <div id="qrcode-container"></div>
+            </div>
 
-        <input type="text" id="otp-input" placeholder="Enter 6-digit code" maxlength="6">
+            <!-- Divider -->
+            <div class="divider"></div>
 
-        <button class="btn-test" onclick="testCode()">Test Code</button>
+            <!-- Info Section -->
+            <div class="section info-section">
+                <div class="account-box">
+                    <div class="label">Account</div>
+                    <div class="issuer" id="issuer-display"></div>
+                    <div class="email" id="email-display"></div>
+                </div>
+                <div class="code-box">
+                    <div class="label">Current Code</div>
+                    <div class="code" id="live-code">------</div>
+                    <div class="timer" id="timer">Waiting...</div>
+                </div>
+            </div>
 
-        <div id="status-message" class="result"></div>
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Test Section -->
+            <div class="section test-section">
+                <div class="section-title">VERIFY CODE</div>
+                <input type="text" id="otp-input" placeholder="000000" maxlength="6">
+                <button class="btn-test" id="verify-btn">VERIFY CODE</button>
+            </div>
+
+        </div>
+
+        <!-- Secret Strip (Full Width Below) -->
+        <div id="secret-strip" class="secret-strip">
+            <span class="secret-label">Secret Key</span>
+            <span class="secret-value" id="secret-text"></span>
+        </div>
+
     </div>
 </div>
 
@@ -220,19 +573,16 @@ Tablets usually have a much taller screen in landscape, avoiding this trap.
 <script>
 // --- Key Disable Logic ---
 document.addEventListener('keydown', function(e) {
-    // Disable F1 through F12 (Keycodes 112 to 123)
     if (e.keyCode >= 112 && e.keyCode <= 123) {
         e.preventDefault();
         return false;
     }
-    // Prevent default zoom combinations (Ctrl/Cmd + Plus/Minus)
     if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-' || e.key === '+' || e.key === '_')) {
         e.preventDefault();
         return false;
     }
 });
 
-// Prevent Pinch-to-Zoom / Trackpad zooming on supported browsers
 document.addEventListener('wheel', function(e) {
     if (e.ctrlKey) {
         e.preventDefault();
@@ -242,14 +592,19 @@ document.addEventListener('wheel', function(e) {
 
 // --- 2FA Logic ---
 let currentTotp = null;
+let currentSecret = null;
 let interval = null;
 
 function generateAuth() {
+    let issuer = document.getElementById('issuer-input').value.trim() || 'XRV LABS';
+    let label = document.getElementById('label-input').value.trim() || 'user@example.com';
+
     let secret = new OTPAuth.Secret({ size: 20 });
+    currentSecret = secret.base32;
 
     currentTotp = new OTPAuth.TOTP({
-        issuer: 'XRV LABS',
-        label: 'Test Project',
+        issuer: issuer,
+        label: label,
         algorithm: 'SHA1',
         digits: 6,
         period: 30,
@@ -261,61 +616,136 @@ function generateAuth() {
 
     new QRCode(document.getElementById("qrcode-container"), {
         text: uri,
-        width: 170,
-        height: 170
+        width: 136,
+        height: 136
     });
 
-    document.getElementById('qrcode-container').style.display = 'flex';
+    // Update account display
+    document.getElementById('issuer-display').textContent = issuer;
+    document.getElementById('email-display').textContent = label;
 
-    let secretEl = document.getElementById('secret-text');
-    secretEl.innerText = `Secret: ${secret.base32}`;
-    secretEl.style.display = 'block';
+    // Show secret in strip
+    document.getElementById('secret-text').textContent = secret.base32;
+    document.getElementById('secret-strip').classList.add('active');
 
-    document.getElementById('live-code').style.display = 'block';
+    // Hide placeholder, show main content
+    document.getElementById('placeholder-state').style.display = 'none';
+    document.getElementById('main-content').classList.add('active');
 
     startTimer();
-    document.getElementById('status-message').style.display = 'none';
+    
+    // Reset verify button
+    let verifyBtn = document.getElementById('verify-btn');
+    verifyBtn.className = 'btn-test';
+    verifyBtn.textContent = 'VERIFY CODE';
     document.getElementById('otp-input').value = '';
 }
 
 function startTimer() {
     clearInterval(interval);
+    updateCode();
+    interval = setInterval(updateCode, 1000);
+}
 
-    interval = setInterval(() => {
-        if (!currentTotp) return;
+function updateCode() {
+    if (!currentTotp) return;
 
-        let now = Math.floor(Date.now() / 1000);
-        let remaining = 30 - (now % 30);
+    let now = Math.floor(Date.now() / 1000);
+    let remaining = 30 - (now % 30);
 
-        let token = currentTotp.generate();
-        document.getElementById('live-code').innerText = `Current Code: ${token}`;
-        document.getElementById('timer').innerText = `Expires in ${remaining}s`;
-    }, 1000);
+    let token = currentTotp.generate();
+    document.getElementById('live-code').textContent = token;
+    document.getElementById('timer').textContent = 'Expires in ' + remaining + 's';
 }
 
 function testCode() {
-    let statusEl = document.getElementById('status-message');
+    let verifyBtn = document.getElementById('verify-btn');
     let inputCode = document.getElementById('otp-input').value.trim();
 
+    // Reset button state first
+    verifyBtn.className = 'btn-test';
+
     if (!currentTotp) {
-        statusEl.innerText = 'Generate first!';
-        statusEl.className = 'result error';
+        showError(verifyBtn, 'Generate First!');
+        return;
+    }
+
+    if (inputCode.length !== 6 || !/^\d{6}$/.test(inputCode)) {
+        showError(verifyBtn, 'Invalid Input!');
         return;
     }
 
     let delta = currentTotp.validate({ token: inputCode, window: 1 });
 
     if (delta !== null) {
-        statusEl.innerText = '✅ Success! Code valid.';
-        statusEl.className = 'result success';
+        showSuccess(verifyBtn);
     } else {
-        statusEl.innerText = '❌ Invalid Code!';
-        statusEl.className = 'result error';
+        showError(verifyBtn, 'INVALID CODE');
     }
 }
 
-document.getElementById('otp-input').addEventListener("keypress", function(e) {
-    if (e.key === "Enter") testCode();
+function showSuccess(btn) {
+    btn.classList.add('success');
+    btn.textContent = 'VERIFIED';
+    
+    setTimeout(function() {
+        btn.className = 'btn-test';
+        btn.textContent = 'VERIFY CODE';
+    }, 2000);
+}
+
+function showError(btn, message) {
+    btn.classList.add('error');
+    btn.textContent = message;
+    
+    setTimeout(function() {
+        btn.className = 'btn-test';
+        btn.textContent = 'VERIFY CODE';
+    }, 2000);
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Generate button click
+    document.getElementById('generate-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        generateAuth();
+    });
+    
+    // Verify button click
+    document.getElementById('verify-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        testCode();
+    });
+    
+    // OTP input - Enter key
+    document.getElementById('otp-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            testCode();
+        }
+    });
+    
+    // OTP input - Only allow numbers
+    document.getElementById('otp-input').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    
+    // Issuer input - Enter key
+    document.getElementById('issuer-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            generateAuth();
+        }
+    });
+    
+    // Label input - Enter key
+    document.getElementById('label-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            generateAuth();
+        }
+    });
 });
 </script>
 
